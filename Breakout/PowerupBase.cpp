@@ -1,15 +1,17 @@
 #include "PowerupBase.h"
+#include "GameManager.h"
 #include <cmath>
 #include <iostream>
 
-PowerupBase::PowerupBase(sf::RenderWindow* window, Paddle* paddle, Ball* ball, float spawnX)
+PowerupBase::PowerupBase(GameManager* gameManager, sf::RenderWindow* window, Paddle* paddle, std::list<Ball*>* balls, float spawnX)
     : _time(0.0f) // Initialize the time variable
 {
+    _gameManager = gameManager;
     _window = window;
     _paddle = paddle;
     _sprite.setRadius(RADIUS);
     _isAlive = true;
-    _ball = ball;
+    _balls = balls;
 
     // Initial position and direction with some variability
     float initialX = spawnX;
@@ -42,7 +44,7 @@ void PowerupBase::update(float dt)
     //_sprite.setFillColor(sf::Color(static_cast<sf::Uint8>(_colours[0]), static_cast<sf::Uint8>(_colours[1]), static_cast<sf::Uint8>(_colours[2]), 255));
 
     // Collide with floor (i.e., was missed)
-    if (_sprite.getPosition().y + RADIUS * 2 >= _window->getSize().y)
+    if (_sprite.getPosition().y + RADIUS * 2 >= _gameManager->getGameDimensions().y)
     {
         _isAlive = false;
     }

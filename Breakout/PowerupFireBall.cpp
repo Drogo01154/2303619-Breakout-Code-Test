@@ -1,8 +1,9 @@
 #include "PowerupFireBall.h"
+#include "GameManager.h"
 
 
-PowerupFireBall::PowerupFireBall(sf::RenderWindow* window, Paddle* paddle, Ball* ball, float x_pos)
-    : PowerupBase(window, paddle, ball, x_pos)
+PowerupFireBall::PowerupFireBall(GameManager* gameManager, sf::RenderWindow* window, Paddle* paddle, std::list<Ball*>* balls, float x_pos)
+    : PowerupBase(gameManager, window, paddle, balls, x_pos)
 {
     _sprite.setFillColor(ballEffectsColour);
 }
@@ -16,13 +17,12 @@ PowerupFireBall::~PowerupFireBall()
     {
         // use my pointer to do things.
     }
-
-
-    
 }
 
 std::pair<POWERUPS, float> PowerupFireBall::applyEffect()
 {
-    _ball->setFireBall(5.0f);
+    for (Ball* ball : *_balls) {
+        ball->setFireBall(5.0f);
+    }
     return { fireBall, 5.0f };
 }

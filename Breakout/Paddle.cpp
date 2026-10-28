@@ -1,11 +1,15 @@
 #include "Paddle.h"
+#include "GameManager.h"
 #include <iostream>
 
-Paddle::Paddle(sf::RenderWindow* window)
-    : _window(window), _width(PADDLE_WIDTH), _timeInNewSize(0.0f), _isAlive(true)
+
+Paddle::Paddle(sf::RenderWindow* window, GameManager* gameManager)
+    : _window(window), _gameManager(gameManager), _width(PADDLE_WIDTH), _timeInNewSize(0.0f), _isAlive(true)
 {
+    sf::Vector2u gameDimensions = gameManager->getGameDimensions();
+    //Store windows initial size
     _sprite.setFillColor(sf::Color::Cyan);
-    _sprite.setPosition((window->getSize().x - _width) / 2.0f, window->getSize().y - 50.0f);
+    _sprite.setPosition((window->getSize().x - _width) / 2.0f, gameDimensions.y - 50.0f);
     _sprite.setSize(sf::Vector2f(_width, PADDLE_HEIGHT));
 }
 
@@ -27,9 +31,28 @@ void Paddle::moveRight(float dt)
 {
     float position = _sprite.getPosition().x;
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && position < _window->getSize().x - _width)
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && position < _gameManager->getGameDimensions().x - _width)
     {
         _sprite.move(sf::Vector2f(dt * PADDLE_SPEED, 0));
+    }
+}
+
+void Paddle::setHorizontalPosition(float newXPosition)
+{
+    //Calculate half size of paddle
+    float halfWidth = _width / 2.f;
+
+    sf::Vector2u gameDimensions = _gameManager->getGameDimensions();
+
+    //get x position for new centre of paddle
+    float checkPos = (newXPosition * gameDimensions.x) - (halfWidth);
+
+    //get sprites current positon
+    sf::Vector2f spritePos = _sprite.getPosition();
+    
+    //if new positon within bounds
+    if ((checkPos < gameDimensions.x - _width) && (checkPos > 0)) {
+        _sprite.setPosition(sf::Vector2f(checkPos, spritePos.y));
     }
 }
 

@@ -4,16 +4,23 @@
 
 class GameManager;  // forward declaration
 
+enum BallType {
+    BASIC,
+    FIREBALL,
+    MULTIBALL
+};
 
 
 class Ball {
 public:
-    Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager);
+    Ball(sf::RenderWindow* window, float velocity, sf::Vector2f position, sf::Vector2f direction, GameManager* gameManager);
     ~Ball();
-    void update(float dt);
+    bool update(float dt);
     void render();
     void setVelocity(float coeff, float duration);
     void setFireBall(float duration);
+    void setMultiBall(float duration);
+    void clearType();
 
 private:
     sf::CircleShape _sprite;
@@ -21,8 +28,8 @@ private:
     sf::RenderWindow* _window;
     float _velocity;
     bool _isAlive;
-    bool _isFireBall;
     float _timeWithPowerupEffect;
+    BallType _type;
 
     GameManager* _gameManager;  // Reference to the GameManager
 

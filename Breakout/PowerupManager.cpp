@@ -1,9 +1,12 @@
 #include "PowerupManager.h"
+#include "GameManager.h"
+#include <ctime>
 
 
-PowerupManager::PowerupManager(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
-    : _window(window), _paddle(paddle), _ball(ball), _rng(std::random_device{}())
+PowerupManager::PowerupManager(GameManager* gameManager, sf::RenderWindow* window, Paddle* paddle, std::list<Ball*>* balls)
+    : _gameManager(gameManager), _window(window), _paddle(paddle), _balls(balls), _rng(std::random_device{}())
 {
+    srand(static_cast<unsigned>(time(nullptr))); // Seed randomness based on time so results are random to user. 
 }
 
 PowerupManager::~PowerupManager()
@@ -57,30 +60,34 @@ void PowerupManager::render()
 void PowerupManager::spawnPowerup()
 {
 
+    sf::Vector2u gameSize = _gameManager->getGameDimensions();
+
     std::uniform_real_distribution<float> xDist(
-        _window->getSize().x * 0.05f,
-        _window->getSize().x * 0.95f
+        gameSize.x * 0.05f,
+        gameSize.x * 0.95f
     );
 
     float spawnX = xDist(_rng);
 
-    switch (rand() % 5)
+    switch (rand() % 6)
     {
     case 0:
-        _powerups.push_back(new PowerupBigPaddle(_window, _paddle, _ball, spawnX));
+        _powerups.push_back(new PowerupBigPaddle(_gameManager, _window, _paddle, _balls, spawnX));
         break;
     case 1:
-        _powerups.push_back(new PowerupSlowBall(_window, _paddle, _ball, spawnX));
+        _powerups.push_back(new PowerupSlowBall(_gameManager, _window, _paddle, _balls, spawnX));
         break;
     case 2:
-        _powerups.push_back(new PowerupFastBall(_window, _paddle, _ball, spawnX));
+        _powerups.push_back(new PowerupFastBall(_gameManager, _window, _paddle, _balls, spawnX));
         break;
     case 3:
-        _powerups.push_back(new PowerupSmallPaddle(_window, _paddle, _ball, spawnX));
+        _powerups.push_back(new PowerupSmallPaddle(_gameManager, _window, _paddle, _balls, spawnX));
         break;
     case 4:
-        _powerups.push_back(new PowerupFireBall(_window, _paddle, _ball, spawnX));
+        _powerups.push_back(new PowerupFireBall(_gameManager, _window, _paddle, _balls, spawnX));
         break;
+    case 5:
+        _powerups.push_back(new PowerupMultiBall(_gameManager, _window, _paddle, _balls, spawnX));
     }
 
 }
@@ -96,6 +103,11 @@ void PowerupManager::checkCollision()
             powerup->setAlive(false);
         }
     }
+}
+
+void PowerupManager::stopCurrentPowerUp()
+{
+    _powerupInEffect.reset();
 }
 
 int PowerupManager::getPowerupsSpawned()

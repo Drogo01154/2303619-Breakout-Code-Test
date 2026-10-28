@@ -5,7 +5,7 @@
 class PowerupSlowBall : public PowerupBase
 {
 public:
-    PowerupSlowBall(sf::RenderWindow* window, Paddle* paddle, Ball* ball, float x_pos);
+    PowerupSlowBall(GameManager* gameManager, sf::RenderWindow* window, Paddle* paddle, std::list<Ball*>* balls, float x_pos);
     ~PowerupSlowBall();
 
     std::pair<POWERUPS, float> applyEffect() override; // Method to apply the power-up effect

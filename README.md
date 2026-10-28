@@ -31,15 +31,27 @@ You are to spend between three and eight hours improving this simple Breakout im
 * Implement commentary with calls to an LLM such as Ollama
 
 # Time Details and Changelist
-_TO DO_
-
-<Add information to this section about the time you've taken for this task along with a professional changelist.>
+Hour 1: Added mouse control.
+    - Added check if mouse position changed within Game Manager, then set paddles X position to that of mouse.
+Hour 2: Fixed scaling issues when changing screen size.
+    - Made game manager store intial window size.
+    - Made Paddle, balls, powerups and brick spawning all use initial window size instead of current windowsize. 
+    - Made it so mouse input normalised between -1 and 1 and then multiplied by original screen width for better scaling with window. 
+Hour 3-4: Added in Multi-ball powerup. 
+    - Changed single ball ptr to a list of balls (so it could be resized efficiently within update loop). 
+    - made create ball function in gameManager which adds new balls to list. 
+    - Added ball type enum, set MultiBall function and functionality in ball update to allow ball create smaller balls if powerup active and it hits bricks, also return bool on if ball is to be deleted when out of bounds. 
+    - Created MultiBall powerup and added it to Powerup managers spawn system. 
+    - Changed GameManager update and render logic to loop over all balls in list as well as delete balls if their update notifies them to.
+    - Updated GameManagers lose life logic to only lose life if no balls remain and respawn ball on next update if all deleted. 
+Last five minuites: Made powerup randomiser seed based on time, so results different each time you load the game. 
 
 ---
 
 ### Change log
 * 2025 - Naman made it harder
 * 2026 - William made it easier again
+* 2026 - James added mouse control, screen scaling fix and multi-ball power up. 
 
 ---
 

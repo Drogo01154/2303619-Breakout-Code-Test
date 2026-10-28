@@ -4,12 +4,15 @@
 #include "CONSTANTS.h"
 #include "Paddle.h"
 #include "Ball.h"
-#include <vector>
+#include <list>
+
+class GameManager;  // forward declaration
 
 class PowerupBase
 {
 public:
-    PowerupBase(sf::RenderWindow* window, Paddle* paddle, Ball* ball, float spawnX);
+
+    PowerupBase(GameManager* gameManager, sf::RenderWindow* window, Paddle* paddle, std::list<Ball*>* balls, float spawnX);
     virtual ~PowerupBase();
 
     void update(float dt);
@@ -31,8 +34,9 @@ protected: // Protected so derived classes can access these members
     float _time;
     bool _isAlive;
     Paddle* _paddle;
-    Ball* _ball;
+    std::list<Ball*>* _balls;
     sf::Vector2f _direction;
+    GameManager* _gameManager;
 
     // Render
     sf::CircleShape _sprite;
